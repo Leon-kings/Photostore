@@ -2498,13 +2498,13 @@ export const Gallery = () => {
           {/* Page navigation */}
           {!isLoading && !error && albums.length > 0 && totalPages > 1 && (
             <div className="flex items-center justify-center gap-4 mb-4">
-              <button
+              <div
                 onClick={() => changePage(-1)}
                 disabled={currentPage === 1}
                 className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/20 transition-colors"
               >
                 <ChevronLeft className="text-white" />
-              </button>
+              </div>
               
               <div className="px-6 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
                 <span className="text-white font-semibold">
@@ -2678,12 +2678,12 @@ export const Gallery = () => {
                   {/* Album header */}
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-4">
-                      <button
+                      <div
                         onClick={closeAlbum}
                         className="text-white hover:text-pink-400 transition-colors bg-black/50 rounded-full p-2"
                       >
                         <ArrowBack className="text-2xl" />
-                      </button>
+                      </div>
                       <div>
                         <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2">
                           <FolderOpen className="text-amber-400" />
@@ -2705,12 +2705,12 @@ export const Gallery = () => {
                         </div>
                       </div>
                     </div>
-                    <button
+                    <div
                       onClick={closeAlbum}
                       className="text-white bg-gradient-to-t from-red-500 to-red-700 transition-colors rounded-full p-2"
                     >
                       <Close className="text-2xl" />
-                    </button>
+                    </div>
                   </div>
 
                   {/* Image grid */}
@@ -2781,12 +2781,12 @@ export const Gallery = () => {
                   <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/80 to-transparent p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <button
+                        <div
                           onClick={closeImageView}
                           className="text-white hover:text-pink-400 transition-colors bg-black/50 rounded-full p-2"
                         >
                           <ArrowBack className="text-2xl" />
-                        </button>
+                        </div>
                         <div className="text-white ml-2">
                           <h3 className="font-bold">{selectedImage.title}</h3>
                           <p className="text-sm text-gray-300">{selectedImage.location}</p>
@@ -2794,30 +2794,30 @@ export const Gallery = () => {
                       </div>
                       
                       <div className="flex items-center gap-2">
-                        <button
+                        <div
                           onClick={() => handleZoom('out')}
                           disabled={zoomLevel <= 1}
                           className="text-white hover:text-blue-400 transition-colors bg-black/50 rounded-full p-2 disabled:opacity-50"
                         >
                           <ZoomOut />
-                        </button>
+                        </div>
                         <span className="text-white bg-black/50 rounded-full px-3 py-1">
                           {zoomLevel}x
                         </span>
-                        <button
+                        <div
                           onClick={() => handleZoom('in')}
                           disabled={zoomLevel >= 3}
                           className="text-white hover:text-blue-400 transition-colors bg-black/50 rounded-full p-2 disabled:opacity-50"
                         >
                           <ZoomIn />
-                        </button>
+                        </div>
                         
-                        <button
+                        <div
                           onClick={closeImageView}
                           className="text-white bg-gradient-to-t from-red-500 to-red-700 transition-colors rounded-full p-2"
                         >
                           <Close className="text-2xl" />
-                        </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2841,21 +2841,21 @@ export const Gallery = () => {
                   {selectedAlbum && selectedAlbum.images && (
                     <>
                       {selectedAlbum.images.findIndex(img => img.id === selectedImage.id) > 0 && (
-                        <button
+                        <div
                           onClick={() => navigateImage(-1)}
                           className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-4 rounded-full hover:bg-pink-600 transition-all backdrop-blur-sm border border-white/20"
                         >
                           <ChevronLeft className="text-3xl" />
-                        </button>
+                        </div>
                       )}
                       
                       {selectedAlbum.images.findIndex(img => img.id === selectedImage.id) < selectedAlbum.images.length - 1 && (
-                        <button
+                        <div
                           onClick={() => navigateImage(1)}
                           className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-4 rounded-full hover:bg-purple-600 transition-all backdrop-blur-sm border border-white/20"
                         >
                           <ChevronRight className="text-3xl" />
-                        </button>
+                        </div>
                       )}
                     </>
                   )}

@@ -1323,7 +1323,7 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import axios from "axios";
 import { toast } from "react-toastify";
 import logo from "../../assets/images/Leon.png";
-import { Close } from "@mui/icons-material";
+import { Close, Message } from "@mui/icons-material";
 import { useAuth } from "../../App"; // Import useAuth from App
 
 export const Navbar = () => {
@@ -1544,8 +1544,8 @@ export const Navbar = () => {
                 onClick={() => setShowContactModal(true)}
                 className="flex items-center bg-gradient-to-t from-blue-500 to-indigo-500 space-x-2 px-4 py-2 rounded-lg text-white font-medium transition-all duration-300"
               >
-                <ContactMailIcon className="text-lg" />
-                <span>Contact</span>
+                <Message className="text-lg" />
+               
               </motion.button>
 
               {/* Conditional rendering based on authentication */}
@@ -1562,7 +1562,7 @@ export const Navbar = () => {
                     className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-t from-green-400 to-green-500 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <DashboardIcon className="text-lg" />
-                    <span>Dashboard</span>
+                   
                   </motion.button>
 
                   {/* Admin Management Button (only for admin) */}
@@ -1577,7 +1577,7 @@ export const Navbar = () => {
                       className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-t from-purple-400 to-purple-500 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300"
                     >
                       <AdminPanelSettingsIcon className="text-lg" />
-                      <span>Management</span>
+                     
                     </motion.button>
                   )}
 
@@ -1611,7 +1611,7 @@ export const Navbar = () => {
                           className="flex items-center space-x-2 w-full px-4 py-2 text-left text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors duration-200"
                         >
                           <DashboardIcon className="text-sm" />
-                          <span>Dashboard</span>
+                          
                         </button>
                         {isAdmin && (
                           <button
@@ -1619,7 +1619,7 @@ export const Navbar = () => {
                             className="flex items-center space-x-2 w-full px-4 py-2 text-left text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors duration-200"
                           >
                             <AdminPanelSettingsIcon className="text-sm" />
-                            <span>Management</span>
+                            
                           </button>
                         )}
                         <button
@@ -1627,7 +1627,7 @@ export const Navbar = () => {
                           className="flex items-center space-x-2 w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 transition-colors duration-200"
                         >
                           <LogoutIcon className="text-sm" />
-                          <span>Logout</span>
+                         
                         </button>
                       </div>
                     </div>
@@ -1644,7 +1644,7 @@ export const Navbar = () => {
                   className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-t from-red-400 to-red-500 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <LoginIcon className="text-lg" />
-                  <span>Login</span>
+                  
                 </motion.button>
               )}
             </div>
@@ -1681,9 +1681,7 @@ export const Navbar = () => {
                   className="flex items-center space-x-3 px-4 py-3 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-all duration-300 w-full"
                 >
                   <ContactMailIcon />
-                  <span className="text-base xsm:text-sm sm:text-base">
-                    Contact
-                  </span>
+             
                 </motion.button>
 
                 {/* Conditional mobile menu based on authentication */}
@@ -1698,9 +1696,7 @@ export const Navbar = () => {
                       className="flex items-center space-x-3 px-4 py-3 bg-white text-purple-600 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 w-full"
                     >
                       <DashboardIcon />
-                      <span className="text-base xsm:text-sm sm:text-base">
-                        Dashboard
-                      </span>
+                
                     </motion.button>
 
                     {isAdmin && (
@@ -1710,12 +1706,10 @@ export const Navbar = () => {
                           navigate("/admin/management");
                           setIsOpen(false);
                         }}
-                        className="flex items-center space-x-3 px-4 py-3 bg-white text-purple-600 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 w-full"
+                        className="flex items-center space-x-3 bg-gradient-to-t from-blue-500 to-indigo-700 px-4 py-3 bg-white text-purple-600 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 w-full"
                       >
                         <AdminPanelSettingsIcon />
-                        <span className="text-base xsm:text-sm sm:text-base">
-                          Management
-                        </span>
+                     
                       </motion.button>
                     )}
 
@@ -1733,12 +1727,10 @@ export const Navbar = () => {
                     <motion.button
                       whileHover={{ x: 10 }}
                       onClick={handleLogout}
-                      className="flex items-center space-x-3 px-4 py-3 bg-red-500 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 w-full"
+                      className="flex items-center bg-gradient-to-t from-red-500 to-red-700 space-x-3 px-4 py-3 bg-red-500 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 w-full"
                     >
                       <LogoutIcon />
-                      <span className="text-base xsm:text-sm sm:text-base">
-                        Logout
-                      </span>
+                     
                     </motion.button>
                   </>
                 ) : (
@@ -1748,12 +1740,10 @@ export const Navbar = () => {
                       setShowLoginModal(true);
                       setIsOpen(false);
                     }}
-                    className="flex items-center space-x-3 px-4 py-3 bg-white text-purple-600 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 w-full"
+                    className="flex items-center space-x-3 px-4 py-3 bg-gradient-to-t from-red-300 to-red-400 text-purple-600 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 w-full"
                   >
                     <LoginIcon />
-                    <span className="text-base xsm:text-sm sm:text-base">
-                      Login
-                    </span>
+               
                   </motion.button>
                 )}
               </div>
@@ -1948,17 +1938,17 @@ export const Navbar = () => {
                       placeholder="Enter your password"
                       required
                     />
-                    <button
-                      type="button"
+                    <div
+                    
                       onClick={togglePasswordVisibility}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-200 focus:outline-none"
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-black focus:outline-none"
                     >
                       {showPassword ? (
                         <VisibilityOffIcon className="text-sm sm:text-base" />
                       ) : (
                         <VisibilityIcon className="text-sm sm:text-base" />
                       )}
-                    </button>
+                    </div>
                   </div>
                 </div>
 
@@ -1975,7 +1965,7 @@ export const Navbar = () => {
                     onClick={() => {
                       toast.info("Password reset feature coming soon!");
                     }}
-                    className="text-white hover:underline focus:outline-none"
+                    className="text-white bg-gradient-to-t from-blue-400 to-indigo-400 focus:outline-none"
                   >
                     Forgot password?
                   </button>
@@ -1997,32 +1987,6 @@ export const Navbar = () => {
                     </>
                   )}
                 </motion.button>
-
-                <p className="text-center text-white text-sm xsm:text-xs sm:text-sm">
-                  Don't have an account?{" "}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowLoginModal(false);
-                      toast.info(
-                        <div>
-                          <p className="font-bold">Contact admin for account creation:</p>
-                          <p>Email: admin@gallery.com</p>
-                        </div>,
-                        {
-                          autoClose: 8000,
-                          style: {
-                            background: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
-                            color: "white",
-                          },
-                        }
-                      );
-                    }}
-                    className="font-bold hover:underline focus:outline-none"
-                  >
-                    Sign up
-                  </button>
-                </p>
               </form>
             </motion.div>
           </>

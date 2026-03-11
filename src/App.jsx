@@ -9,6 +9,7 @@
 // import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 // import { motion } from "framer-motion";
+// import axios from "axios";
 // import "./App.css";
 
 // // Material Icons
@@ -28,12 +29,123 @@
 // import { Dashboard } from "./components/dashboard/Dashboard";
 // import { GalleryManagement } from "./components/galleryDashboard/GalleryDashboard";
 // import { Footer } from "./components/footer/Footer";
+// import { IPManagement } from "./components/IPmanagent/IpManagement";
+// import { ContactManagement } from "./components/contacts/ContactManagement";
 
-// // API Base URL
+// // API Base URL - Your existing backend
 // const API_BASE_URL = "https://myalbumnode.onrender.com";
+// const NODE_ENV = 'development';
 
 // // Create Auth Context
 // const AuthContext = createContext(null);
+
+// // IP Tracking function - Sends to your API without storing locally
+// const trackUserIP = async () => {
+//   try {
+//     // Check if already sent in this session (using sessionStorage only to prevent spam)
+//     const ipSent = sessionStorage.getItem("ipSent");
+//     if (ipSent) {
+//       // console.log("IP already sent in this session");
+//       return;
+//     }
+
+//     // Get user's IP address using free service
+//     let userIP = null;
+//     let locationData = null;
+
+//     try {
+//       // Try to get IP with location data
+//       const response = await axios.get('https://ipapi.co/json/', { timeout: 5000 });
+//       userIP = response.data.ip;
+//       locationData = {
+//         city: response.data.city,
+//         region: response.data.region,
+//         country: response.data.country_name,
+//         latitude: response.data.latitude,
+//         longitude: response.data.longitude,
+//         org: response.data.org,
+//         postal: response.data.postal,
+//         timezone: response.data.timezone
+//       };
+//     } catch (error) {
+//       // console.log("ipapi.co failed, trying backup...");
+
+//       // Fallback to simple IP only
+//       const ipResponse = await axios.get('https://api.ipify.org?format=json', { timeout: 5000 });
+//       userIP = ipResponse.data.ip;
+//     }
+
+//     if (!userIP) {
+//       // console.log("Could not get IP address");
+//       return;
+//     }
+
+//     // Get browser information
+//     const browserInfo = {
+//       userAgent: navigator.userAgent,
+//       language: navigator.language,
+//       platform: navigator.platform,
+//       screenResolution: `${window.screen.width}x${window.screen.height}`,
+//       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+//       referrer: document.referrer || 'direct',
+//       timestamp: new Date().toISOString(),
+//       page: window.location.pathname,
+//       href: window.location.href
+//     };
+
+//     // Prepare data to send
+//     const trackingData = {
+//       ip: userIP,
+//       ...(locationData && { location: locationData }),
+//       ...browserInfo
+//     };
+
+//     // Send to your API endpoint
+//     // You need to create this endpoint on your backend
+//     const response = await axios.post(`${API_BASE_URL}/api/track-visitor`, trackingData, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       timeout: 8000 // 8 second timeout
+//     });
+
+//     if (response.status === 200 || response.status === 201) {
+//       // Mark as sent for this session only (prevents multiple sends in same session)
+//       sessionStorage.setItem("ipSent", "true");
+
+//       // console.log("✅ IP successfully sent to API:", userIP);
+
+//       // Optional: Show subtle success notification (can be removed)
+//       if (NODE_ENV === 'development') {
+//         toast.success(`📍 IP tracked: ${userIP}`, {
+//           autoClose: 2000,
+//           style: {
+//             background: "linear-gradient(135deg, #10b981, #059669)",
+//             color: "white",
+//           },
+//         });
+//       }
+//     }
+//   } catch (error) {
+//     // Log error but don't show to user
+//     // console.error("Failed to send IP to API:", error.message);
+
+//     // In development, show error for debugging
+//     if (NODE_ENV === 'development') {
+//       toast.error(`Failed to track IP: ${error.message}`, {
+//         autoClose: 3000,
+//       });
+//     }
+
+//     // Don't mark as sent if failed - will retry on next page load
+//   }
+// };
+
+// // Optional: Manual retry function for development
+// const retryIPSubmission = () => {
+//   sessionStorage.removeItem("ipSent");
+//   trackUserIP();
+// };
 
 // // Custom hook to use auth context
 // export const useAuth = () => {
@@ -51,6 +163,9 @@
 //   const [token, setToken] = useState(localStorage.getItem("token"));
 
 //   useEffect(() => {
+//     // Track IP when the app loads
+//     trackUserIP();
+
 //     // Check for stored token on mount
 //     const storedToken = localStorage.getItem("token");
 //     const storedUser = localStorage.getItem("user");
@@ -215,6 +330,11 @@
 //   const { isAuthenticated, loading } = useAuth();
 //   const navigate = useNavigate();
 
+//   useEffect(() => {
+//     // Track IP when accessing protected routes
+//     trackUserIP();
+//   }, []);
+
 //   if (loading) {
 //     return (
 //       <div className="min-h-screen flex items-center justify-center">
@@ -239,6 +359,11 @@
 // const AdminRoute = ({ children }) => {
 //   const { isAdmin, loading } = useAuth();
 //   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     // Track IP when accessing admin routes
+//     trackUserIP();
+//   }, []);
 
 //   if (loading) {
 //     return (
@@ -276,6 +401,11 @@
 // // 404 Not Found Component
 // const NotFound = () => {
 //   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     // Track IP when accessing 404 page
+//     trackUserIP();
+//   }, []);
 
 //   return (
 //     <div className="min-h-screen flex items-center justify-center p-4">
@@ -329,36 +459,57 @@
 //   );
 // };
 
+// // Development helper component
+// const DevTools = () => {
+
+//   if (NODE_ENV !== 'development') return null;
+
+//   return (
+//     <div className="fixed bottom-20 right-4 flex flex-col gap-2 z-50">
+//       <button
+//         onClick={retryIPSubmission}
+//         className="bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700"
+//         title="Retry IP Submission"
+//       >
+//         🔄
+//       </button>
+//     </div>
+//   );
+// };
+
 // // Main App Component
 // export default function App() {
 //   return (
+//     <AuthProvider>
+//       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+//         <Navbar />
 
-//       <AuthProvider>
-//         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-//           <Navbar />
+//         {/* Development tools - only shows in development */}
+//         <DevTools />
 
-//           {/* Toast Container for notifications */}
-//           <ToastContainer
-//             position="top-right"
-//             autoClose={3000}
-//             hideProgressBar={false}
-//             newestOnTop
-//             closeOnClick
-//             rtl={false}
-//             pauseOnFocusLoss
-//             draggable
-//             pauseOnHover
-//             theme="dark"
-//             className="z-50"
-//           />
+//         {/* Toast Container for notifications */}
+//         <ToastContainer
+//           position="top-right"
+//           autoClose={3000}
+//           hideProgressBar={false}
+//           newestOnTop
+//           closeOnClick
+//           rtl={false}
+//           pauseOnFocusLoss
+//           draggable
+//           pauseOnHover
+//           theme="dark"
+//           className="z-50"
+//         />
 
-//           {/* Routes */}
-//           <Routes>
-//             {/* Public Routes - Gallery is home */}
-//             <Route path="/" element={<Gallery />} />
-//             <Route path="/gallery" element={<Gallery />} />
+//         {/* Routes */}
+//         <Routes>
+//           {/* Public Routes - Gallery is home */}
+//           <Route path="/" element={<Gallery />} />
+//           <Route path="/gallery" element={<Gallery />} />
 
-//             {/* Protected Routes */}
+//           {/* Protected Routes with Sidebar Layout */}
+//           <Route element={<ProtectedLayout />}>
 //             <Route
 //               path="/dashboard"
 //               element={
@@ -368,7 +519,7 @@
 //               }
 //             />
 
-//             {/* Protected Admin Routes */}
+//             {/* Protected Admin Routes with Sidebar */}
 //             <Route
 //               path="/admin/management"
 //               element={
@@ -380,13 +531,35 @@
 //               }
 //             />
 
-//             {/* 404 Route */}
-//             <Route path="*" element={<NotFound />} />
-//           </Routes>
-//           <Footer />
-//         </div>
-//       </AuthProvider>
+//             <Route
+//               path="/ip/management"
+//               element={
+//                 <PrivateRoute>
+//                   <AdminRoute>
+//                     <IPManagement />
+//                   </AdminRoute>
+//                 </PrivateRoute>
+//               }
+//             />
 
+//             <Route
+//               path="/contacts/management"
+//               element={
+//                 <PrivateRoute>
+//                   <AdminRoute>
+//                     <ContactManagement />
+//                   </AdminRoute>
+//                 </PrivateRoute>
+//               }
+//             />
+//           </Route>
+
+//           {/* 404 Route */}
+//           <Route path="*" element={<NotFound />} />
+//         </Routes>
+//         <Footer />
+//       </div>
+//     </AuthProvider>
 //   );
 // }
 
@@ -435,6 +608,8 @@ import { Gallery } from "./components/gallery/Gallery";
 import { Dashboard } from "./components/dashboard/Dashboard";
 import { GalleryManagement } from "./components/galleryDashboard/GalleryDashboard";
 import { Footer } from "./components/footer/Footer";
+import { IPManagement } from "./components/IPmanagent/IpManagement";
+import { ContactManagement } from "./components/contacts/ContactManagement";
 
 // API Base URL - Your existing backend
 const API_BASE_URL = "https://myalbumnode.onrender.com";
@@ -456,7 +631,7 @@ const trackUserIP = async () => {
     // Get user's IP address using free service
     let userIP = null;
     let locationData = null;
-    
+
     try {
       // Try to get IP with location data
       const response = await axios.get('https://ipapi.co/json/', { timeout: 5000 });
@@ -473,7 +648,7 @@ const trackUserIP = async () => {
       };
     } catch (error) {
       // console.log("ipapi.co failed, trying backup...");
-      
+
       // Fallback to simple IP only
       const ipResponse = await axios.get('https://api.ipify.org?format=json', { timeout: 5000 });
       userIP = ipResponse.data.ip;
@@ -516,9 +691,9 @@ const trackUserIP = async () => {
     if (response.status === 200 || response.status === 201) {
       // Mark as sent for this session only (prevents multiple sends in same session)
       sessionStorage.setItem("ipSent", "true");
-      
+
       // console.log("✅ IP successfully sent to API:", userIP);
-      
+
       // Optional: Show subtle success notification (can be removed)
       if (NODE_ENV === 'development') {
         toast.success(`📍 IP tracked: ${userIP}`, {
@@ -533,14 +708,14 @@ const trackUserIP = async () => {
   } catch (error) {
     // Log error but don't show to user
     // console.error("Failed to send IP to API:", error.message);
-    
+
     // In development, show error for debugging
     if (NODE_ENV === 'development') {
       toast.error(`Failed to track IP: ${error.message}`, {
         autoClose: 3000,
       });
     }
-    
+
     // Don't mark as sent if failed - will retry on next page load
   }
 };
@@ -865,9 +1040,9 @@ const NotFound = () => {
 
 // Development helper component
 const DevTools = () => {
-  
+
   if (NODE_ENV !== 'development') return null;
-  
+
   return (
     <div className="fixed bottom-20 right-4 flex flex-col gap-2 z-50">
       <button
@@ -929,6 +1104,28 @@ export default function App() {
               <PrivateRoute>
                 <AdminRoute>
                   <GalleryManagement />
+                </AdminRoute>
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/ip/management"
+            element={
+              <PrivateRoute>
+                <AdminRoute>
+                  <IPManagement />
+                </AdminRoute>
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/contacts/management"
+            element={
+              <PrivateRoute>
+                <AdminRoute>
+                  <ContactManagement />
                 </AdminRoute>
               </PrivateRoute>
             }
